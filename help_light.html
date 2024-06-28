@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Shuffling Game</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            box-sizing: border-box;
+            height: 100vh;
+            background-color: white;
+        }
+
+        .main_container {
+            height: 100vh;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-direction: row;
+            color: black;
+        }
+
+        .header {
+            width: 100%;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            color: black;
+        }
+
+        .slide {
+            height: 100%;
+            width: 180px;
+            position: absolute;
+            transition: 0.5s ease;
+            background-color: white;
+            transform: translateX(-180px);
+        }
+
+        .slide h1 {
+            text-align: right;
+            padding: 10px 0;
+            padding-right: 30px;
+            pointer-events: none;
+            color: black;
+        }
+
+        .slide ul li{
+            list-style: none;
+        }
+
+        .slide ul li a {
+            padding: 10px 0;
+            display: block;
+            text-transform: capitalize;
+            text-decoration: none;
+            transition: 0.2s ease-out;
+            color: black;
+        }
+
+        .slide ul li:hover a {
+            color: white;
+            background-color: black;
+        }
+
+        .slide ul li a i {
+            width: 40px;
+            text-align: center;
+        }
+
+        input {
+            display: none;
+            visibility: hidden;
+            -webkit-appearance: none;
+        }
+
+        .toggle {
+            position: absolute;
+            height: 30px;
+            width: 30px;
+            top: 20px;
+            left: 15px;
+            z-index: 1;
+            cursor: pointer;
+            border-radius: 2px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .toggle .common {
+            position: absolute;
+            height: 2px;
+            width: 20px;
+            background-color: black;
+            border-radius: 50px;
+            transition: 0.3s ease;
+        }
+
+        .toggle .top_line {
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .toggle .middle_line {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .toggle .bottom_line {
+            top: 70%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        input:checked ~ .toggle .top_line {
+            left: 2px;
+            top: 14px;
+            width: 25px;
+            transform: rotate(45deg);
+        }
+
+        input:checked ~ .toggle .bottom_line {
+            left: 2px;
+            top: 14px;
+            width: 25px;
+            transform: rotate(-45deg);
+        }
+
+        input:checked ~ .toggle .middle_line {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+
+        input:checked ~ .slide {
+            transform: translateX(0);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.9);
+        }
+
+        .loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        transition: opacity 0.75s, visibility 0.75s;
+        }
+
+        .loader--hidden {
+        opacity: 0;
+        visibility: hidden;
+        }
+
+        .loader::after {
+        content: "";
+        width: 75px;
+        height: 75px;
+        border: 15px solid #000;
+        border-top-color: lightgray;
+        border-radius: 50%;
+        animation: loading 0.75s ease infinite;
+        }
+
+        @keyframes loading {
+            from {
+                transform: rotate(0turn);
+            }
+            to {
+                transform: rotate(1turn);
+            }
+        }
+
+        .text_container {
+            width: 300px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="loader"></div>
+    <div class="header">
+        <h1>SHUFFLING GAME</h1>
+    </div>
+    <label>
+        <input type="checkbox">
+        <div class="toggle">
+            <span class="top_line common"></span>
+            <span class="middle_line common"></span>
+            <span class="bottom_line common"></span>
+        </div>
+        <div class="slide">
+            <h1>MENU</h1>
+            <ul>
+                <li><a href="difficulty_light.html"><i class="fas fa-gamepad"></i> difficulty</a></li>
+                <li><a href="settings_light.html"><i class="fas fa-cog"></i> settings</a></li>
+                <li><a href="help_light.html"><i class="fas fa-info-circle"></i> help</a></li>
+                <li><a href="contact_light.html"><i class="fas fa-envelope"></i> contact</a></li>
+            </ul>
+        </div>
+    </label>
+    <div class="main_container">
+        <div class="text_container">
+            <p>This color memory game is an engaging and interactive challenge designed to test players' memory and attention to detail. At the start, players see ten squares in a grid, one of which briefly flips to reveal a different color. After three seconds, the square flips back, and all squares shuffle their positions simultaneously. Players must then identify and click on the square that was originally a different color. A correct guess results in a win, while an incorrect one prompts another try. This game is both entertaining and mentally stimulating, providing a fun way to improve concentration and memory skills.</p>
+        </div>
+    </div>
+<script>
+    window.addEventListener("load", () => {
+        const loader = document.querySelector(".loader");
+
+        loader.classList.add("loader--hidden");
+
+        loader.addEventListener("transitionend", () => {
+            document.body.removeChild(loader);
+        });
+    });
+</script>
+</body>
+</html>
