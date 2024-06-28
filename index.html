@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Shuffling Game</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            box-sizing: border-box;
+            height: 100vh;
+            background-color: black;
+        }
+
+        .main_container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+        }
+
+        .secondary_container
+        {
+            height: 220px;
+            width: 520px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid white;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+        }
+
+        .header {
+            width: 100%;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            color: white;
+        }
+
+        .slide {
+            height: 100%;
+            width: 180px;
+            position: absolute;
+            transition: 0.5s ease;
+            background-color: black;
+            transform: translateX(-180px);
+        }
+
+        .slide h1 {
+            text-align: right;
+            padding: 10px 0;
+            padding-right: 30px;
+            pointer-events: none;
+            color: white;
+        }
+
+        .slide ul li{
+            list-style: none;
+        }
+
+        .slide ul li a {
+            padding: 10px 0;
+            display: block;
+            text-transform: capitalize;
+            text-decoration: none;
+            transition: 0.2s ease-out;
+            color: white;
+        }
+
+        .slide ul li:hover a {
+            color: black;
+            background-color: white;
+        }
+
+        .slide ul li a i {
+            width: 40px;
+            text-align: center;
+        }
+
+        input {
+            display: none;
+            visibility: hidden;
+            -webkit-appearance: none;
+        }
+
+        .toggle {
+            position: absolute;
+            height: 30px;
+            width: 30px;
+            top: 20px;
+            left: 15px;
+            z-index: 1;
+            cursor: pointer;
+            border-radius: 2px;
+            background-color: black;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .toggle .common {
+            position: absolute;
+            height: 2px;
+            width: 20px;
+            background-color: white;
+            border-radius: 50px;
+            transition: 0.3s ease;
+        }
+
+        .toggle .top_line {
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .toggle .middle_line {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .toggle .bottom_line {
+            top: 70%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        input:checked ~ .toggle .top_line {
+            left: 2px;
+            top: 14px;
+            width: 25px;
+            transform: rotate(45deg);
+        }
+
+        input:checked ~ .toggle .bottom_line {
+            left: 2px;
+            top: 14px;
+            width: 25px;
+            transform: rotate(-45deg);
+        }
+
+        input:checked ~ .toggle .middle_line {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+
+        input:checked ~ .slide {
+            transform: translateX(0);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.9);
+        }
+
+        #startButton {
+            background-color: black;
+            color: white;
+            border: 1px solid white;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 50px;
+            transition: 0.3s ease-in;
+        }
+        
+        #startButton:hover {
+            background-color: white;
+            color: black;
+            transition: 0.3s ease-out;
+        }
+
+        .game-container {
+            width: 490px; /* 5 columns * 100px + 4 * 10px gap */
+            height: 160px; /* 2 rows * 100px + 1 * 10px gap */
+        }
+
+        .flip-container {
+            perspective: 1000px;
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            transition: transform 0.6s;
+        }
+
+        .flipper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+
+        .flip-container.flipped .flipper {
+            transform: rotateY(180deg);
+        }
+
+        .front, .back {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            backface-visibility: hidden;
+            border-radius: 2px;
+        }
+
+        .front {
+            background-color: white;
+        }
+
+        .back {
+            background-color: gray;
+            transform: rotateY(180deg);
+        }
+
+        .diff {
+            color: white;
+            font-size: 10px;
+            margin-top: 20px;
+        }
+
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            transition: opacity 0.75s, visibility 0.75s;
+        }
+
+        .loader--hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader::after {
+            content: "";
+            width: 75px;
+            height: 75px;
+            border: 15px solid #fff;
+            border-top-color: lightgray;
+            border-radius: 50%;
+            animation: loading 0.75s ease infinite;
+        }
+
+        @keyframes loading {
+            from {
+                transform: rotate(0turn);
+            }
+            to {
+                transform: rotate(1turn);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader"></div>
+    <div class="header">
+        <h1>SHUFFLING GAME</h1>
+    </div>
+    <label>
+        <input type="checkbox">
+        <div class="toggle">
+            <span class="top_line common"></span>
+            <span class="middle_line common"></span>
+            <span class="bottom_line common"></span>
+        </div>
+        <div class="slide">
+            <h1>MENU</h1>
+            <ul>
+                <li><a href="difficulty.html"><i class="fas fa-gamepad"></i> difficulty</a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> settings</a></li>
+                <li><a href="help.html"><i class="fas fa-info-circle"></i> help</a></li>
+                <li><a href="contact.html"><i class="fas fa-envelope"></i> contact</a></li>
+            </ul>
+        </div>
+    </label>
+    <div class="main_container">
+        <button id="startButton">START</button>
+        <div class="secondary_container">
+            <div id="gameContainer" class="game-container"></div>
+        </div>
+        <h3 class="diff">Easy Difficulty</h3>
+    </div>
+    
+<script>
+    window.addEventListener("load", () => {
+        const loader = document.querySelector(".loader");
+
+        loader.classList.add("loader--hidden");
+
+        loader.addEventListener("transitionend", () => {
+            document.body.removeChild(loader);
+        });
+    });
+
+    document.getElementById('startButton').addEventListener('click', startGame);
+
+    let differentSquareIndex = null;
+    let squareElements = [];
+
+    // Initialize the squares on page load
+    window.onload = initSquares;
+
+    function initSquares() {
+        const gameContainer = document.getElementById('gameContainer');
+        gameContainer.innerHTML = '';
+
+        // Create 10 squares
+        for (let i = 0; i < 10; i++) {
+            const flipContainer = document.createElement('div');
+            flipContainer.classList.add('flip-container');
+            flipContainer.dataset.index = i;
+            flipContainer.style.transform = `translate(${(i % 5) * 110}px, ${Math.floor(i / 5) * 110}px)`;
+            
+            const flipper = document.createElement('div');
+            flipper.classList.add('flipper');
+            
+            const front = document.createElement('div');
+            front.classList.add('front');
+            
+            const back = document.createElement('div');
+            back.classList.add('back');
+            
+            flipper.appendChild(front);
+            flipper.appendChild(back);
+            flipContainer.appendChild(flipper);
+            gameContainer.appendChild(flipContainer);
+            
+            squareElements.push(flipContainer);
+        }
+    }
+
+    function startGame() {
+        // Select one square to be different
+        differentSquareIndex = Math.floor(Math.random() * 10);
+        const differentSquare = squareElements[differentSquareIndex];
+        differentSquare.classList.add('flipped');
+
+        // Change the different square back to normal after 3 seconds
+        setTimeout(() => {
+            differentSquare.classList.remove('flipped');
+            startShuffling();
+        }, 3000);
+    }
+
+    function startShuffling() {
+        const positions = squareElements.map(square => square.style.transform);
+
+        // Shuffle positions
+        const shuffledPositions = positions.slice().sort(() => Math.random() - 0.5);
+
+        // Apply new positions
+        squareElements.forEach((square, index) => {
+            setTimeout(() => {
+                square.style.transform = shuffledPositions[index];
+            }, index * 100); // stagger the animation start times
+        });
+
+        // Allow player to click after shuffling
+        setTimeout(() => {
+            squareElements.forEach(square => square.addEventListener('click', checkAnswer));
+        }, squareElements.length * 100 + 500); // ensure all animations are complete
+    }
+
+    function checkAnswer(event) {
+        const clickedIndex = event.target.closest('.flip-container').dataset.index;
+        if (clickedIndex == differentSquareIndex) {
+            alert('You win!');
+        } else {
+            alert('Try again!');
+        }
+        startGame();
+    }
+</script>
+</body>
+</html>
